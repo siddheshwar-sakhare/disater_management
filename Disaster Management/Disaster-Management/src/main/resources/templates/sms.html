@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send SMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+        }
+        input, button {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<h1>Send SMS</h1>
+<form id="smsForm">
+    <input type="text" id="to" placeholder="Recipient Number (e.g., +1234567890)" required>
+    <textarea id="body" placeholder="Enter your message" required></textarea>
+    <button type="submit">Send SMS</button>
+</form>
+
+<script>
+    document.getElementById('smsForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const to = document.getElementById('to').value;
+        const body = document.getElementById('body').value;
+
+        try {
+            const response = await fetch('http://localhost:7000/sms/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `to=${encodeURIComponent(to)}&body=${encodeURIComponent(body)}`,
+            });
+
+            const result = await response.text();
+            alert(result);
+        } catch (error) {
+            alert('Error sending SMS: ' + error.message);
+        }
+    });
+</script>
+</body>
+</html>
